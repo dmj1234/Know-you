@@ -1,20 +1,83 @@
 <template>
-	<view >
-首页
-    <text class="iconfont icon-vedio"></text>
-    <uni-badge text="2"></uni-badge>
+	<view class="home_tab">
+    <home-album></home-album>
+    <home-category></home-category>
+    <home-new></home-new>
+    <home-recommend></home-recommend>
+
+    <view class="home_tab_title">
+      <uni-segmented-control
+          :current="current"
+          :values="items.map((v) => v.title)"
+          @clickItem="onClickItem"
+          style-type="text"
+          active-color="red"
+      ></uni-segmented-control>
+      <view class="title_inner"></view>
+      <view class="iconfont iconsearch"></view>
+    </view>
+
+      <view class="home_tab_content">
+        <view v-if="current === 0"> <home-recommend></home-recommend> </view>
+        <view v-if="current === 1"> <home-category></home-category> </view>
+        <view v-if="current === 2"> <home-new></home-new> </view>
+        <view v-if="current === 3"> <home-album></home-album> </view>
+      </view>
 	</view>
 </template>
 
 <script>
-import {uniBadge} from '@dcloudio/uni-ui'
+import homeAlbum from "./home-album";
+import homeCategory from "./home-category";
+import homeNew from "./home-new";
+import homeRecommend from "./home-recommend";
+import {uniSegmentedControl} from '@dcloudio/uni-ui'
 	export default {
-components:{
-  uniBadge
-}
-	}
+ components:{
+   homeAlbum,
+   homeCategory,
+   homeNew ,
+   homeRecommend,
+   uniSegmentedControl
+ },
+    data() {
+      return {
+        items: [
+          { title: "专辑" },
+          { title: "分类" },
+          { title: "最新" },
+          { title: "推荐" },
+        ],
+        current: 0,
+      };
+    },
+    methods: {
+      onClickItem(e) {
+        if (this.current !== e.currentIndex) {
+          this.current = e.currentIndex;
+        }
+      },
+    },
+
+  }
 </script>
 
-<style>
+<style lang="scss">
+.home_tab {
+  .home_tab_title{
+    position: relative;
+    .title_inner{
+      width: 60%;
+      margin: 0 auto;
+    }
+    .iconsearch{
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 5%;
+    }
+  }
+  .home_tab_content{}
 
+}
 </style>

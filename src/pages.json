@@ -32,10 +32,10 @@
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "Know you picture",
+		"navigationBarBackgroundColor": "#000",
+		"backgroundColor": "#000"
 	},
 	"tabBar" : {
 		"color": "#8a8a8a",
@@ -60,7 +60,7 @@
 				"pagePath": "pages/video/index",
 				"text": "精美视屏",
 				"iconPath": "./static/icon/_videocamera.png",
-				"selectedIconPath": "./static/icon/_videocamera.png"
+				"selectedIconPath": "./static/icon/videocamera.png"
 			},
 			{
 				"pagePath": "pages/search/index",
