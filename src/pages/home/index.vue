@@ -1,6 +1,9 @@
 <template>
 	<view class="home_tab">
-
+<!--    <home-album></home-album>-->
+<!--    <home-category></home-category>-->
+<!--    <home-new></home-new>-->
+<!--    <home-recommend></home-recommend>-->
 
     <view class="home_tab_title">
       <uni-segmented-control
