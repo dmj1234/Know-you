@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="recommend_view" scroll-y v-if="recommends.length > 0">
+  <scroll-view @scrolltolower="handleToLower" class="recommend_view" scroll-y v-if="recommends.length > 0">
     <view class="recommend_wrap">
       <view class="recommend_item" v-for="item in recommends" :key="item.id">
         <image mode="widthFix" :src="item.thumb"></image>
@@ -18,7 +18,7 @@
         <view class="monthes_title_more"> 更多 > </view>
       </view>
       <view class="monthes_content">
-        <view class="monthes_item" v-for="item in monthes.items" :key="item.id">
+        <view class="monthes_item" v-for="(item,index) in monthes.items" :key="item.id">
           <image
             mode="aspectFill"
             :src="item.thumb + item.rule.replace('$<height>', 360)"
@@ -31,7 +31,7 @@
         <text>热门</text>
       </view>
       <view class="hots_content">
-        <view class="hot_item" v-for="item in hots" :key="item.id">
+        <view class="hots_item" v-for="(item,index) in hots" :key="item.id">
           <image mode="widthFix" :src="item.thumb"></image>
         </view>
       </view>
@@ -46,27 +46,62 @@ export default {
     return {
       recommends: [],
       monthes: {},
-    };
-  },
-  mounted() {
-    this.request({
-      url: "http://157.122.54.189:9088/image/v3/homepage/vertical",
-      // url: "http://service.picasso.adesk.com/v3/homepage/vertical",
-      data: {
+      hots:[],
+      params:{
         limit: 30,
         order: "hot",
         skip: 0,
       },
-    }).then((result) => {
-      console.log(result);
+      hasMore:{
 
-      this.recommends = result.res.homepage[1].items;
+      }
 
-      this.monthes = result.res.homepage[2];
-      this.monthes.MM = moment(this.monthes.stime).format("MM");
-      this.monthes.DD = moment(this.monthes.stime).format("DD");
-    });
+    };
   },
+  mounted() {
+ this.getList();
+  },
+  methods:{
+    //获取接口数据
+    getList(){
+      this.request({
+        url: "http://157.122.54.189:9088/image/v3/homepage/vertical",
+        // url: "http://service.picasso.adesk.com/v3/homepage/vertical",
+        data: this.params,
+      }).then((result) => {
+        if (result.res.vertical.length ===0) {
+          this.hasMore =false;
+          return;
+        }
+
+        if (this.recommends.length ===0) {
+          this.recommends = result.res.homepage[1].items;
+
+          this.monthes = result.res.homepage[2];
+          this.monthes.MM = moment(this.monthes.stime).format("MM");
+          this.monthes.DD = moment(this.monthes.stime).format("DD");
+        }
+
+        this.hots = [...this.hots,...result.res.vertical];
+      });
+    },
+    //滚动条触发事件
+    handleToLower(){
+      //修改参数   skip+= limit;
+      //重新发送请求  getList()
+      //请求回来成功  hots会叠加
+      if (this.hasMore) {
+        this.params.skip += this.params.limit;
+        this.getList();
+      }else{
+        uni.showToast ({
+          title:"数据没有了",
+          icon:"none"
+        })
+      }
+
+    }
+  }
 };
 </script>
 
