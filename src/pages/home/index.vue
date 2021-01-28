@@ -1,10 +1,5 @@
 <template>
 	<view class="home_tab">
-<!--    <home-album></home-album>-->
-<!--    <home-category></home-category>-->
-<!--    <home-new></home-new>-->
-<!--    <home-recommend></home-recommend>-->
-
     <view class="home_tab_title">
       <uni-segmented-control
           :current="current"
@@ -43,10 +38,10 @@ import {uniSegmentedControl} from '@dcloudio/uni-ui'
     data() {
       return {
         items: [
-          { title: "专辑" },
+          { title: "推荐" },
           { title: "分类" },
           { title: "最新" },
-          { title: "推荐" },
+          { title: "专辑" },
         ],
         current: 0,
       };

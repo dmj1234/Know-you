@@ -1,16 +1,16 @@
 <template>
   <scroll-view @scrolltolower="handleToLower" class="recommend_view" scroll-y v-if="recommends.length > 0">
     <view class="recommend_wrap">
-      <view class="recommend_item" v-for="item in recommends" :key="item.id">
+      <navigator class="recommend_item" v-for="item in recommends" :key="item.id" :url="`/pages/album/index?id=${item.target}`">
         <image mode="widthFix" :src="item.thumb"></image>
-      </view>
+      </navigator>
     </view>
 
     <view class="monthes_wrap">
       <view class="monthes_title">
         <view class="monthes_title_info">
           <view class="monthes_info">
-            <text>{{ monthes.DD }}/</text>
+            <text>{{ monthes.DD }} /</text>
             {{ monthes.MM }}月
           </view>
           <view class="monthes_text">{{ monthes.title }}</view>
@@ -20,8 +20,8 @@
       <view class="monthes_content">
         <view class="monthes_item" v-for="(item,index) in monthes.items" :key="item.id">
           <image
-            mode="aspectFill"
-            :src="item.thumb + item.rule.replace('$<height>', 360)"
+            mode="widthFix"
+            :src="item.thumb + item.rule.replace('$<Height>', 360)"
           ></image>
         </view>
       </view>
@@ -52,25 +52,26 @@ export default {
         order: "hot",
         skip: 0,
       },
-      hasMore:{
-
-      }
-
-    };
+      hasMore:true
+    }
   },
   mounted() {
- this.getList();
+    uni.setNavigationBarTitle({title:"推荐"})
+    this.getList();
   },
   methods:{
     //获取接口数据
     getList(){
       this.request({
-        url: "http://157.122.54.189:9088/image/v3/homepage/vertical",
-        // url: "http://service.picasso.adesk.com/v3/homepage/vertical",
+        url:'http://157.122.54.189:9088/image/v3/homepage/vertical',
         data: this.params,
-      }).then((result) => {
+      }).then(result=> {
         if (result.res.vertical.length ===0) {
-          this.hasMore =false;
+          this.hasMore = false;
+          uni.showToast({
+            title: '没有更多数据了！',
+            icon: "none"
+          });
           return;
         }
 
@@ -83,7 +84,7 @@ export default {
         }
 
         this.hots = [...this.hots,...result.res.vertical];
-      });
+      })
     },
     //滚动条触发事件
     handleToLower(){
@@ -97,12 +98,11 @@ export default {
         uni.showToast ({
           title:"数据没有了",
           icon:"none"
-        })
+        });
       }
-
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -143,7 +143,6 @@ export default {
     .monthes_title_more {
       font-size: 24rpx;
       color: $color;
-      justify-content: flex-end;
     }
   }
   .monthes_content {
@@ -162,6 +161,8 @@ export default {
       border-left: 5rpx solid $color;
       font-size: 24rpx;
       font-weight: 600;
+      color: $color;
+      padding-left: 20rpx;
     }
   }
   .hots_content {
